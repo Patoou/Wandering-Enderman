@@ -84,7 +84,6 @@
     },
     angry: {
       walk: ["walk-angry1.png", "walk-angry2-idle.png", "walk-angry3.png"],
-      idle: ["walk-angry2-idle.png"],
       grab: [
         "walk-angry-grab.png",
         "walk-angry2-grab-idle.png",
@@ -241,6 +240,11 @@
     }
 
     const now = Date.now();
+
+    if (state.mood === "angry" && state.idlePauseUntil) {
+      state.idlePauseUntil = 0;
+    }
+
     if (
       state.active &&
       !state.isSpawning &&
@@ -319,8 +323,8 @@
       if (state.pendingGrab) {
         return;
       }
-      if (state.active && Math.random() < 0.65) {
-        state.idlePauseUntil = Date.now() + randomBetween(3000, 8000);
+      if (state.active && state.mood !== "angry" && Math.random() < 0.65) {
+        state.idlePauseUntil = Date.now() + randomBetween(3000, 20000);
         state.target = state.position;
         setAnimationMode("idle");
       } else {
@@ -402,13 +406,21 @@
       return "idle";
     }
     const distance = Math.hypot(state.target.x - state.position.x, state.target.y - state.position.y);
-    return distance < 4 ? "idle" : "walk";
+    const mode = distance < 4 ? "idle" : "walk";
+    if (mode === "idle" && state.mood === "angry") {
+      return "walk";
+    }
+    return mode;
   }
 
   function setAnimationMode(mode) {
     state.animation.mode = mode;
     const moodSprites = SPRITES[state.mood] || SPRITES.calm;
-    const frames = moodSprites[mode] || moodSprites.walk || [];
+    let frames = moodSprites[mode] || moodSprites.walk || [];
+    if (mode === "idle") {
+      const idleFrame = SPRITES.calm.idle?.[0];
+      frames = idleFrame ? [idleFrame] : frames.slice(0, 1);
+    }
     state.animation.frames = frames;
     state.animation.index = 0;
     state.animation.lastAdvance = 0;
@@ -484,6 +496,10 @@
     state.mood = mood;
     if (mood === "angry") {
       state.lastAngryAt = Date.now();
+      state.idlePauseUntil = 0;
+      if (!state.pendingGrab && state.active) {
+        state.target = pickNewTarget();
+      }
     }
     setAnimationMode(determineAnimationMode());
     updateRootClasses();
