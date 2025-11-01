@@ -27,4 +27,4 @@ This WebExtension drops an animated Enderman onto every page you visit. The Ende
 
 ## Credits
 
-- Pixel-art Enderman sprites by [hansungkee](https://x.com/hansungkee).
+- Pixel-art Enderman sprites by [hansungkee](https://x.com/hansungkee1).
