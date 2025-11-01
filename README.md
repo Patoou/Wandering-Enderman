@@ -15,8 +15,14 @@ This WebExtension drops an animated Enderman onto every page you visit. The Ende
 ## Installation
 
 1. Zip the contents of this folder (keeping `manifest.json` at the archive root).
+   ```bash
+   cd enderman-firefox-extension
+   zip -r ../wandering-enderman.zip .
+   ```
 2. In Firefox, open `about:addons` and use the gear menu → **Install Add-on From File…**.
 3. Select the generated ZIP file to install the extension permanently.
+
+The bundled manifest already declares a `browser_specific_settings.gecko.id` so Firefox accepts the package; adjust it if you plan to distribute the add-on publicly.
 
 ## Folder structure
 

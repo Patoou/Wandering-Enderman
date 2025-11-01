@@ -3,6 +3,12 @@
   "name": "Wandering Enderman",
   "version": "1.0.0",
   "description": "Spawns an Enderman that roams the page, snatching elements for a short trip before dropping them back.",
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "wandering-enderman@codexproject.local",
+      "strict_min_version": "109.0"
+    }
+  },
   "content_scripts": [
     {
       "matches": [
