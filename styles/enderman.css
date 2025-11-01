@@ -1,0 +1,51 @@
+.enderman-extension-root {
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 2147483647;
+  transform: translate3d(-9999px, -9999px, 0);
+  width: 96px;
+  height: 160px;
+  opacity: 1;
+  transition: transform 0.08s linear, opacity 0.18s ease;
+  will-change: transform;
+}
+
+.enderman-extension-root.enderman-hidden {
+  opacity: 0;
+}
+
+.enderman-sprite {
+  width: 100%;
+  height: 100%;
+  background-repeat: no-repeat;
+  background-position: center bottom;
+  background-size: contain;
+  image-rendering: pixelated;
+  transform-origin: center bottom;
+  filter: drop-shadow(0 0 6px rgba(120, 0, 180, 0.45));
+  transition: filter 0.25s ease;
+}
+
+.enderman-extension-root.enderman-angry .enderman-sprite {
+  filter: drop-shadow(0 0 14px rgba(200, 0, 255, 0.72));
+}
+
+.enderman-extension-root.enderman-hunting .enderman-sprite {
+  filter: drop-shadow(0 0 10px rgba(150, 0, 255, 0.6));
+}
+
+.enderman-placeholder {
+  display: inline-block;
+  background: rgba(30, 0, 60, 0.08);
+  outline: 1px dashed rgba(178, 0, 255, 0.35);
+  outline-offset: -2px;
+  min-width: 20px;
+  min-height: 14px;
+}
+
+.enderman-grabbed {
+  pointer-events: none !important;
+  transition: transform 0.08s linear;
+}

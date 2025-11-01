@@ -1,0 +1,30 @@
+{
+  "manifest_version": 3,
+  "name": "Wandering Enderman",
+  "version": "1.0.0",
+  "description": "Spawns an Enderman that roams the page, snatching elements for a short trip before dropping them back.",
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "scripts/enderman.js"
+      ],
+      "css": [
+        "styles/enderman.css"
+      ],
+      "run_at": "document_idle"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "frames/*.png"
+      ],
+      "matches": [
+        "<all_urls>"
+      ]
+    }
+  ]
+}
