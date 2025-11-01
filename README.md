@@ -12,23 +12,19 @@ This WebExtension drops an animated Enderman onto every page you visit. The Ende
 - He walks up to a chosen element before snatching it, then carries it around before returning it.
 - Spawn effects (`spawn*.png`) play when he first appears and whenever he reaches you during a hunt—he teleports away and resumes wandering somewhere else.
 
-## Install for development
+## Installation
 
-1. Open Firefox and navigate to `about:debugging#/runtime/this-firefox`.
-2. Click **Load Temporary Add-on…**.
-3. Select the `manifest.json` file that lives inside the `enderman-firefox-extension/` folder (Firefox will load the whole folder automatically).
-4. Visit any tab to watch the Enderman explore the page.
-
-The extension runs entirely as a content script, so refreshing the page (or the extension) is enough to pick up changes during development.
+1. Zip the contents of this folder (keeping `manifest.json` at the archive root).
+2. In Firefox, open `about:addons` and use the gear menu → **Install Add-on From File…**.
+3. Select the generated ZIP file to install the extension permanently.
 
 ## Folder structure
 
 - `manifest.json` – WebExtension manifest (MV3).
 - `scripts/enderman.js` – Content script controlling the animation and grabbing behaviour.
 - `styles/enderman.css` – Styling for the Enderman and placeholders.
-
-Temporary add-ons are removed when Firefox restarts. Load the manifest again if you want the Enderman back.
+- `frames/` – Pixel-art sprite sheets.
 
 ## Credits
 
-- Pixel-art Enderman sprites by [hansungkee](https://github.com/hansungkee).
+- Pixel-art Enderman sprites by [hansungkee](https://x.com/hansungkee).
