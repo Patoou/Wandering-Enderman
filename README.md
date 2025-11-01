@@ -12,17 +12,14 @@ This WebExtension drops an animated Enderman onto every page you visit. The Ende
 - He walks up to a chosen element before snatching it, then carries it around before returning it.
 - Spawn effects (`spawn*.png`) play when he first appears and whenever he reaches you during a hunt—he teleports away and resumes wandering somewhere else.
 
-## Installation
+## Installation (Chrome)
 
-1. Zip the contents of this folder (keeping `manifest.json` at the archive root).
-   ```bash
-   cd enderman-firefox-extension
-   zip -r ../wandering-enderman.zip .
-   ```
-2. In Firefox, open `about:addons` and use the gear menu → **Install Add-on From File…**.
-3. Select the generated ZIP file to install the extension permanently.
+1. Open Chrome and navigate to `chrome://extensions/`.
+2. Enable **Developer mode** (toggle in the top-right).
+3. Click **Load unpacked** and choose the `enderman-firefox-extension/` folder (the folder containing `manifest.json`).
+4. Visit any page and wait for the Enderman to appear (he shows up for 1–3 minutes every hour).
 
-The bundled manifest already declares a `browser_specific_settings.gecko.id` so Firefox accepts the package; adjust it if you plan to distribute the add-on publicly.
+To publish the add-on, upload this same folder (or a `.zip` created from it) to the Chrome Web Store dashboard.
 
 ## Folder structure
 
