@@ -17,12 +17,12 @@
 
   const SPRITE_SCALE = 3;
   const BASE_FRAME_INTERVAL = 110;
-  const SPEED = { calm: 1.3, angry: 2.5 };
+  const SPEED = { calm: 1.2, angry: 2.4 };
   const HUNT_SPEED_MULTIPLIER = 1.1;
-  const ACTION_DELAY = { calm: [24000, 42000], angry: [12000, 22000] };
+  const ACTION_DELAY = { calm: [8000, 18000], angry: [8000, 16000] };
   const HUNT_DURATION = { calm: [3800, 6400], angry: [3100, 5200] };
-  const MOOD_DURATION = { calm: [48000, 72000], angry: [5000, 9000] };
-  const ANGRY_TRIGGER_CHANCE = 0.2;
+  const MOOD_DURATION = { calm: [55000, 75000], angry: [8000, 12000] };
+  const ANGRY_TRIGGER_CHANCE = 0.6;
   const DROP_DELAY = { calm: [3600, 6400], angry: [2200, 4200] };
   const GRAB_APPROACH_DISTANCE = 36;
 
@@ -133,7 +133,9 @@
     lastMouse: {
       x: window.innerWidth / 2,
       y: window.innerHeight / 2
-    }
+    },
+    idlePauseUntil: 0,
+    lastAngryAt: Date.now() - 90000
   };
 
   function mapSpriteFiles(definitions) {
@@ -238,6 +240,26 @@
       return;
     }
 
+    const now = Date.now();
+    if (
+      state.active &&
+      !state.isSpawning &&
+      !state.isTeleporting &&
+      now < state.idlePauseUntil &&
+      !state.carrying &&
+      state.activity !== "hunt"
+    ) {
+      state.target = state.position;
+      return;
+    }
+
+    if (state.idlePauseUntil && now >= state.idlePauseUntil) {
+      state.idlePauseUntil = 0;
+      if (!state.pendingGrab && state.activity !== "hunt") {
+        state.target = pickNewTarget();
+      }
+    }
+
     if (state.pendingGrab) {
       const { element } = state.pendingGrab;
       if (!element || !element.isConnected || !element.getBoundingClientRect) {
@@ -297,7 +319,13 @@
       if (state.pendingGrab) {
         return;
       }
-      state.target = pickNewTarget();
+      if (state.active && Math.random() < 0.65) {
+        state.idlePauseUntil = Date.now() + randomBetween(3000, 8000);
+        state.target = state.position;
+        setAnimationMode("idle");
+      } else {
+        state.target = pickNewTarget();
+      }
       return;
     }
 
@@ -433,11 +461,18 @@
     clearTimeout(state.moodTimer);
     const [min, max] = MOOD_DURATION[state.mood] || MOOD_DURATION.calm;
     state.moodTimer = window.setTimeout(() => {
-      if (state.mood === "calm" && Math.random() > ANGRY_TRIGGER_CHANCE) {
-        scheduleMoodShift();
-        return;
+      const now = Date.now();
+      if (state.mood === "calm") {
+        const timeSinceAngry = now - state.lastAngryAt;
+        if (timeSinceAngry >= 90000 || Math.random() < ANGRY_TRIGGER_CHANCE) {
+          setMood("angry");
+        } else {
+          scheduleMoodShift();
+          return;
+        }
+      } else {
+        setMood("calm");
       }
-      setMood(state.mood === "calm" ? "angry" : "calm");
       scheduleMoodShift();
     }, randomBetween(min, max));
   }
@@ -447,9 +482,12 @@
       return;
     }
     state.mood = mood;
+    if (mood === "angry") {
+      state.lastAngryAt = Date.now();
+    }
     setAnimationMode(determineAnimationMode());
     updateRootClasses();
-    const burstDelay = mood === "angry" ? randomBetween(9000, 14000) : randomBetween(16000, 22000);
+    const burstDelay = mood === "angry" ? randomBetween(6000, 9000) : randomBetween(9000, 14000);
     scheduleNextAction(burstDelay);
   }
 
@@ -494,7 +532,7 @@
     ) {
       return;
     }
-    if (Math.random() > 0.55) {
+    if (Math.random() > 0.7) {
       return;
     }
     const candidate = pickRandomElement();
